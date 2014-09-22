@@ -1,72 +1,33 @@
 <%- include ../header %>
 <script src="javascripts/jquery-ui-timepicker-addon.js"></script>
-<style>
-    .attention {
-        /* background: url("../images/icons/exclamation.png") no-repeat scroll 10px 11px #fffbcc;*/
-        border-color: #e6db55;
-        color: #666452;
-    }
-
-</style>
 <script>
     $(function() {
-//-------------网易新闻-------------------
-        //弹窗样式
-        $("#dialog").dialog({
-            autoOpen: false,  //设置对话框打开的方式 不是自动打开
-            show: "blind",    //打开时的动画效果
-            hide:"blind",    //关闭是的动画效果
-            modal:true,          //true代表运用遮罩效果
-            buttons: {        //添加按钮的操作
-                "确定": function () {
-                    choose();
-                    $(this).dialog("close");//关闭对话框
-
-                },
-                "取消": function () {
-                    $(this).dialog("close");
-                }
-            }
-            });
-
+//-------------新浪微博直发-------------------
         var name = $("#taskname");
-        var url = $("#url");
         var doc = $("#doc");
-        //var sub_count = $("#sub_count");
-        var allFields = $([]).add(name).add(url).add(doc);
+        var allFields = $([]).add(name).add(doc);
 
         var info = $("#163_addInfo");
         var infobox = $("#infobox");
-        var urlRegex = "^((http)?://)?comment\\.[0-9a-z_!~*'().&=+$%-]+\\.163\.com/.*/[0-9A-Z]+/[0-9A-Z]+\.html.#";
         $("#doSubmit").click(function() {
             var bValid = true;
 
             allFields.removeClass("ui-state-error");
             bValid = bValid && checkLength(name, "任务名称", 1, 200);
-            bValid = bValid && checkLength(url, "任务地址", 1, 200);
-          //  bValid = bValid && checkRegexp(sub_count, /^[0-9]*$/, "请输入正确数量。");
-
             bValid = bValid && checkTime();
             bValid = bValid && checkRegexp();
-
-//            if (sub_count.val() < 1) {
-//                updateTips("数量必须大于0.");
-//                bValid = bValid && false;
-//            }
-//            if (sub_count.val() > 100) {
-//                updateTips("数量必须小于100.");
-//                bValid = bValid && false;
-//            }
-            if (doc.val() <= 100) {
-                updateTips("语料为空.");
+            if (doc.val() == "") {
+                updateTips("任务内容为空.");
                 bValid = bValid && false;
             }
             if (bValid) {
                 var list=getCount();
+                var accountType=getAccount();
                 var param = {
                     task: $("#task").val(),
                     taskname: name.val(),
-                    url: url.val(),
+                    accountType:accountType,
+                   // url: url.val(),
                     task_type: $("#task_type").val(),
                     schedule: list,
                     doc: $("#doc").val()
@@ -122,30 +83,6 @@
                     $("#count").append(html);
                     $("#val1").val(id);
                     $(".datepicker").datetimepicker({dateFormat: "yy-mm-dd"});
-                });
-
-        // 加载执行地区--  地区从后台获取
-        $("#sec").click(
-                function() {
-                   // $.post("#/...",function(data) {//返回json类型的值
-                       // if(data){
-                          // if(true){
-                               //弹窗显示
-                              var area=[
-                                 { id:1001, name:"北京",pid:"1",flag:"0"},
-                                 { id:1002, name:"上海",pid:"2",flag:"0"},
-                                 { id:1003, name:"广州",pid:"3",flag:"0"}
-                             ];
-                              var html="";
-                             for(var  i=0;i<area.length;i++){
-                                 html+='<div><input type="checkbox" name="city" value="'+area[i].name+'" >'+area[i].name+'</div>';
-                            }
-                               //$("#dialog").append(html);
-                            $("#dialog").html(html);
-                     //   }
-
-                    $("#dialog").dialog("open");  //open参数  作用  打开对话框
-                  //  });
                 });
            function updateTips(t) {
             infobox.removeClass("information");
@@ -228,7 +165,6 @@
             return s < 10 ? '0' + s: s;
         }
         $(".datepicker").datetimepicker({dateFormat: "yy-mm-dd"});
-
         var date = new Date();
         var d = date.getFullYear() + "-" + p((date.getMonth() + 1)) + "-" +p( date.getDate()) + " " +p(date.getHours()) + ":" + p(date.getMinutes());
         $("#startTime0").val(d);
@@ -238,7 +174,6 @@
 
     });
 
-
     function toCancel(obj){
          var id=obj;
          $("#but"+id).hide();
@@ -246,16 +181,15 @@
          $("#endTime"+id).val("");
          $("#sub_count"+id).val("");
     }
-    function choose(){
-        var str = document.getElementsByName("city");
-        var num = str.length;
-        var chestr ="";
-        for(var i=0;i<num;i++){
-            if(str[i].checked == true){
-                chestr +=str[i].value+" ";
-                $("#area").attr("value",chestr);
+    function getAccount(){
+        var accountRadio=document.getElementsByName("accountType");
+        for(var i=0;i<accountRadio.length;i++) {
+            if(accountRadio[i].checked){
+                var accountValue = accountRadio[i].value;
+                break;
             }
         }
+        return accountValue;
     }
 
 </script>
@@ -271,7 +205,7 @@
 <div class="content-box"><!-- Start Content Box -->
 
     <div class="content-box-header">
-        <h3>创建网易新闻评论任务</h3>
+        <h3>创建新浪微博直发任务</h3>
         <ul class="content-box-tabs">
             <li><a href="/newtask" class="button">返回</a></li> <!-- href must be unique and match the id of target div -->
         </ul>
@@ -284,27 +218,19 @@
 
         <form action="/#" >
             <fieldset>
-                <input type="hidden" name="task" id="task" value="303"/>
+                <input type="hidden" name="task" id="task" value="201"/>
                 <input type="hidden"  id="task_type" value="901"/>
                 <p>
                     <label>任务名称</label>
-                    <input class="text-input small-input" type="text" id="taskname" name="small-input" value="未命名网新评论任务" /> <!-- Classes for input-notification: success, error, information, attention -->
+                    <input class="text-input small-input" type="text" id="taskname" name="small-input" value="未命名新浪直发任务" /> <!-- Classes for input-notification: success, error, information, attention -->
                 </p>
 
                 <p>
-                    <label>新闻连接</label>
-                    <input class="text-input medium-input" type="text" id="url" name="medium-input" /> <span class="input-notification information png_bg">输入网站地址</span>
-                </p>
-
-                <p>
-                    <label>评论语料</label>
-                    <textarea class="text-input textarea wysiwyg" id="doc" name="textfield" cols="79" rows="10"></textarea>
-                    <br /><small>每一个换行为一条语料</small>
-
+                    <label>任务内容</label>
+                    <textarea class="text-input textarea wysiwyg" id="doc" name="textfield" cols="79" rows="3"></textarea>
                 </p>
                 <p>
                     <label>执行控制 </label>
-
                     <input type="hidden" id="val1" value="0" >
                 <div id="count">
                     <div id="but0">
@@ -316,11 +242,11 @@
                 <span><img alt="添加" src="images/icons/add.png" id="add"></span>
                 </p>
                 <p>
-                    <label>执行地区&nbsp;&nbsp;<img alt="查看地区" src="images/icons/sec.png" id="sec"></label>
-                    <input class="text-input medium-input" type="text" id="area" name="area" readonly />&nbsp;&nbsp;
+                    <label>账号选择</label>
+                    <input type="radio" name="accountType" id="account"  value="1" >全部&nbsp;&nbsp;
+                    <input type="radio" name="accountType" id="privAccount"  value="2" />个人&nbsp;&nbsp;
+                    <input type="radio" name="accountType" id="sysAccount"  value="3" checked="checked" />系统&nbsp;&nbsp;
                 </p>
-
-
                 <p>
                 <div class="button" id="doSubmit">&nbsp &nbsp 提交 &nbsp &nbsp</div>
                 </p>
@@ -329,9 +255,7 @@
 
             </fieldset>
         </form>
-        <!--弹框内容-->
-        <div id="dialog" title="选择地区">
-        </div>
+
 
 
 

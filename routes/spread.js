@@ -158,6 +158,86 @@ exports.route = function(app, ensureAuthenticated) {
             res.render('spread/t501', {user: req.session.user, menu: results[0]});
         });
     });
+    //新浪微博评论
+    app.get('/t202', ensureAuthenticated, function(req, res) {
+        async.parallel([
+            function(callback) {
+                role.getMenu(req.path, req.session.role, callback);
+            }
+        ], function(err, results) {
+            res.render('spread/t202', {user: req.session.user, menu: results[0]});
+        });
+    });
+    //腾讯微博评论
+    app.get('/t102', ensureAuthenticated, function(req, res) {
+        async.parallel([
+            function(callback) {
+                role.getMenu(req.path, req.session.role, callback);
+            }
+        ], function(err, results) {
+            res.render('spread/t102', {user: req.session.user, menu: results[0]});
+        });
+    });
+    //新浪微博转发203
+    app.get('/t203', ensureAuthenticated, function(req, res) {
+        async.parallel([
+            function(callback) {
+                role.getMenu(req.path, req.session.role, callback);
+            }
+        ], function(err, results) {
+            res.render('spread/t203', {user: req.session.user, menu: results[0]});
+        });
+    });
+    //腾讯微博转发103
+    app.get('/t103', ensureAuthenticated, function(req, res) {
+        async.parallel([
+            function(callback) {
+                role.getMenu(req.path, req.session.role, callback);
+            }
+        ], function(err, results) {
+            res.render('spread/t103', {user: req.session.user, menu: results[0]});
+        });
+    });
+    //新浪微博直发
+    app.get('/t201', ensureAuthenticated, function(req, res) {
+        async.parallel([
+            function(callback) {
+                role.getMenu(req.path, req.session.role, callback);
+            }
+        ], function(err, results) {
+            res.render('spread/t201', {user: req.session.user, menu: results[0]});
+        });
+    });
+    //腾讯微博直发
+    app.get('/t101', ensureAuthenticated, function(req, res) {
+        async.parallel([
+            function(callback) {
+                role.getMenu(req.path, req.session.role, callback);
+            }
+        ], function(err, results) {
+            res.render('spread/t101', {user: req.session.user, menu: results[0]});
+        });
+    });
+    //网易论坛发帖任务
+    app.get('/t301', ensureAuthenticated, function(req, res) {
+        async.parallel([
+            function(callback) {
+                role.getMenu(req.path, req.session.role, callback);
+            }
+        ], function(err, results) {
+            res.render('spread/t301', {user: req.session.user, menu: results[0]});
+        });
+    });
+   //网易论坛顶贴任务
+    app.get('/t302', ensureAuthenticated, function(req, res) {
+        async.parallel([
+            function(callback) {
+                role.getMenu(req.path, req.session.role, callback);
+            }
+        ], function(err, results) {
+            res.render('spread/t302', {user: req.session.user, menu: results[0]});
+        });
+    });
     //新建评论任务
     app.post('/newsCommentNew', ensureAuthenticated, function(req, res) {
         taskManager.addNewsCommentTask(req, function(err) {
@@ -166,6 +246,17 @@ exports.route = function(app, ensureAuthenticated) {
             } else {
                 res.send('1');
             }
+        });
+    });
+
+    //通用任务
+    app.get('/httprequest', ensureAuthenticated, function(req, res) {
+        async.parallel([
+            function(callback) {
+                role.getMenu(req.path, req.session.role, callback);
+            }
+        ], function(err, results) {
+            res.render('spread/httprequest', {user: req.session.user, menu: results[0]});
         });
     });
     //分页显示任务信息

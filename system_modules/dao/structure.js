@@ -347,13 +347,13 @@ var structure = [
                                 route: '',
                                 sub: [
                                     {
-                                        text: '腾讯微博评论',
+                                        text: '腾讯微博转发',
                                         id: 40251,
                                         icons: 'qqweibo48.png',
                                         route: '/t103'
                                     },
                                     {
-                                        text: '新浪微博评论',
+                                        text: '新浪微博转发',
                                         id: 40252,
                                         icons: 'weibo48.png',
                                         route: '/t203'
