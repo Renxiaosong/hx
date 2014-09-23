@@ -1,24 +1,63 @@
 <%- include ../header %>
 <script src="javascripts/jquery-ui-timepicker-addon.js"></script>
+<style>
+    .attention {
+        /* background: url("../images/icons/exclamation.png") no-repeat scroll 10px 11px #fffbcc;*/
+        border-color: #e6db55;
+        color: #666452;
+    }
+
+</style>
 <script>
 $(function() {
-//-------------网易论坛顶帖-------------------
-    var name = $("#taskTitle");
+//-------------凤凰新闻-------------------
+    //弹窗样式
+    $("#dialog").dialog({
+        autoOpen: false,  //设置对话框打开的方式 不是自动打开
+        show: "blind",    //打开时的动画效果
+        hide:"blind",    //关闭是的动画效果
+        modal:true,          //true代表运用遮罩效果
+        buttons: {        //添加按钮的操作
+            "确定": function () {
+                choose();
+                $(this).dialog("close");//关闭对话框
+
+            },
+            "取消": function () {
+                $(this).dialog("close");
+            }
+        }
+    });
+
+    var name = $("#taskname");
     var url = $("#url");
     var doc = $("#doc");
+    var area = $("#area");
+    //var sub_count = $("#sub_count");
     var allFields = $([]).add(name).add(url).add(doc);
 
     var info = $("#163_addInfo");
     var infobox = $("#infobox");
-   // var urlRegex = "^((http)?://)?comment\\.[0-9a-z_!~*'().&=+$%-]+\\.163\.com/.*/[0-9A-Z]+/[0-9A-Z]+\.html.#";
+    var urlRegex = "^((http)?://)?comment\\.[0-9a-z_!~*'().&=+$%-]+\\.163\.com/.*/[0-9A-Z]+/[0-9A-Z]+\.html.#";
     $("#doSubmit").click(function() {
         var bValid = true;
-        allFields.removeClass("ui-state-error");
 
-        bValid = bValid && checkUrl();
+        allFields.removeClass("ui-state-error");
+        bValid = bValid && checkLength(name, "任务名称", 1, 200);
+        bValid = bValid && checkLength(url, "任务地址", 1, 200);
+        //  bValid = bValid && checkRegexp(sub_count, /^[0-9]*$/, "请输入正确数量。");
+
         bValid = bValid && checkTime();
         bValid = bValid && checkRegexp();
 
+//            if (sub_count.val() < 1) {
+//                updateTips("数量必须大于0.");
+//                bValid = bValid && false;
+//            }
+//            if (sub_count.val() > 100) {
+//                updateTips("数量必须小于100.");
+//                bValid = bValid && false;
+//            }
         if (doc.val() <= 100) {
             updateTips("语料为空.");
             bValid = bValid && false;
@@ -27,16 +66,13 @@ $(function() {
             var list=getCount();
             var param = {
                 task: $("#task").val(),
-                taskTitle: name.val(),
+                taskname: name.val(),
                 url: url.val(),
                 task_type: $("#task_type").val(),
                 schedule: list,
+                area: $("#area").val(),
                 doc: $("#doc").val()
 
-
-
-
-                //jjjjj
             };
             updateTips2("正在提交，请稍后...");
             $("#duSubmit").hide();
@@ -90,6 +126,29 @@ $(function() {
                 $(".datepicker").datetimepicker({dateFormat: "yy-mm-dd"});
             });
 
+    // 加载执行地区--  地区从后台获取
+    $("#sec").click(
+            function() {
+                // $.post("#/...",function(data) {//返回json类型的值
+                // if(data){
+                // if(true){
+                //弹窗显示
+                var area=[
+                    { id:1001, name:"北京",pid:"1",flag:"0"},
+                    { id:1002, name:"上海",pid:"2",flag:"0"},
+                    { id:1003, name:"广州",pid:"3",flag:"0"}
+                ];
+                var html="";
+                for(var  i=0;i<area.length;i++){
+                    html+='<div><input type="checkbox" name="city" value="'+area[i].name+'" >'+area[i].name+'</div>';
+                }
+                //$("#dialog").append(html);
+                $("#dialog").html(html);
+                //   }
+
+                $("#dialog").dialog("open");  //open参数  作用  打开对话框
+                //  });
+            });
     function updateTips(t) {
         infobox.removeClass("information");
         infobox.addClass("error");
@@ -105,19 +164,17 @@ $(function() {
     function updateTips2(t) {
         info.text(t);
     }
-  //url 和name 的非空校验
-    function checkUrl(){
-       // var url = $("#url").val();
-        if($("#url").val()==""){
-            updateTips("文章地址不能为空");
+
+    function checkLength(o, n, min, max) {
+        if (o.val().length > max || o.val().length < min) {
+            o.addClass("ui-state-error");
+            updateTips(n + " 输入有误");
             return false;
+        } else {
+            return true;
         }
-        if($("#taskTitle").val()==""){
-            updateTips("任务标题不能为空");
-            return false;
-        }
-        return true;
     }
+
     //评论数量的校验
     function checkRegexp(){
         var index = $("#val1").val();
@@ -165,7 +222,7 @@ $(function() {
             }
             return true;
         }
-      return true;
+        return true;
     }
 
     //格式化日期
@@ -173,6 +230,7 @@ $(function() {
         return s < 10 ? '0' + s: s;
     }
     $(".datepicker").datetimepicker({dateFormat: "yy-mm-dd"});
+
     var date = new Date();
     var d = date.getFullYear() + "-" + p((date.getMonth() + 1)) + "-" +p( date.getDate()) + " " +p(date.getHours()) + ":" + p(date.getMinutes());
     $("#startTime0").val(d);
@@ -182,6 +240,7 @@ $(function() {
 
 });
 
+
 function toCancel(obj){
     var id=obj;
     $("#but"+id).hide();
@@ -189,7 +248,17 @@ function toCancel(obj){
     $("#endTime"+id).val("");
     $("#sub_count"+id).val("");
 }
-
+function choose(){
+    var str = document.getElementsByName("city");
+    var num = str.length;
+    var chestr ="";
+    for(var i=0;i<num;i++){
+        if(str[i].checked == true){
+            chestr +=str[i].value+" ";
+            $("#area").attr("value",chestr);
+        }
+    }
+}
 
 </script>
 
@@ -204,7 +273,7 @@ function toCancel(obj){
 <div class="content-box"><!-- Start Content Box -->
 
     <div class="content-box-header">
-        <h3>创建网易论坛顶帖任务</h3>
+        <h3>创建凤凰新闻评论任务</h3>
         <ul class="content-box-tabs">
             <li><a href="/newtask" class="button">返回</a></li> <!-- href must be unique and match the id of target div -->
         </ul>
@@ -217,27 +286,27 @@ function toCancel(obj){
 
         <form action="/#" >
             <fieldset>
-                <input type="hidden" name="task" id="task" value="302"/>
+                <input type="hidden" name="task" id="task" value="303"/>
                 <input type="hidden"  id="task_type" value="901"/>
                 <p>
-                    <label>文章地址</label>
-                    <input  class="text-input medium-input" type="text" id="url"  name="medium-input" /><span class="input-notification information png_bg">输入顶贴文章的地址</span>
-                    <span id="urlMessage"></span>
+                    <label>任务名称</label>
+                    <input class="text-input small-input" type="text" id="taskname" name="small-input" value="未命名凤凰新闻评论任务" /> <!-- Classes for input-notification: success, error, information, attention -->
                 </p>
 
                 <p>
-                    <label>任务标题</label>
-                    <input class="text-input small-input"  type="text" id="taskTitle" name="small-input" />
+                    <label>新闻连接</label>
+                    <input class="text-input medium-input" type="text" id="url" name="medium-input" /> <span class="input-notification information png_bg">输入网站地址</span>
                 </p>
-
-
 
                 <p>
                     <label>评论语料</label>
-                    <textarea class="text-input textarea wysiwyg" id="doc" name="textfield" cols="79" rows="5"></textarea>
+                    <textarea class="text-input textarea wysiwyg" id="doc" name="textfield" cols="79" rows="10"></textarea>
+                    <br /><small>每一个换行为一条语料</small>
+
                 </p>
                 <p>
                     <label>执行控制 </label>
+
                     <input type="hidden" id="val1" value="0" >
                 <div id="count">
                     <div id="but0">
@@ -248,6 +317,11 @@ function toCancel(obj){
                 </div>
                 <span><img alt="添加" src="images/icons/add.png" id="add"></span>
                 </p>
+                <p>
+                    <label>执行地区&nbsp;&nbsp;<img alt="查看地区" src="images/icons/sec.png" id="sec"></label>
+                    <input class="text-input medium-input" type="text" id="area" name="area" readonly />&nbsp;&nbsp;
+                </p>
+
 
                 <p>
                 <div class="button" id="doSubmit">&nbsp &nbsp 提交 &nbsp &nbsp</div>
@@ -257,7 +331,9 @@ function toCancel(obj){
 
             </fieldset>
         </form>
-
+        <!--弹框内容-->
+        <div id="dialog" title="选择地区">
+        </div>
 
 
 
