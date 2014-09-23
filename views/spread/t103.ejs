@@ -5,8 +5,8 @@ $(function() {
 //-------------腾讯微博转发-------------------
     var name = $("#taskTitle");
     var url = $("#url");
-    var allFields = $([]).add(name).add(url);
-
+    var allFields = $([]).add(name).add(url);//comment
+    var comment=$("#comment");
     var info = $("#163_addInfo");
     var infobox = $("#infobox");
     $("#doSubmit").click(function() {
@@ -27,6 +27,7 @@ $(function() {
                 task_type: $("#task_type").val(),
                 accountType:accountType,
                 schedule: list,
+                comment:comment.val(),
                 doc: $("#doc").val()
 
             };

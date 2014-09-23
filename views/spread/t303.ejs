@@ -32,7 +32,7 @@
         var name = $("#taskname");
         var url = $("#url");
         var doc = $("#doc");
-        //var sub_count = $("#sub_count");
+        var area = $("#area");
         var allFields = $([]).add(name).add(url).add(doc);
 
         var info = $("#163_addInfo");
@@ -69,6 +69,7 @@
                     url: url.val(),
                     task_type: $("#task_type").val(),
                     schedule: list,
+                    area: $("#area").val(),
                     doc: $("#doc").val()
 
                 };
@@ -136,7 +137,8 @@
                                  { id:1002, name:"上海",pid:"2",flag:"0"},
                                  { id:1003, name:"广州",pid:"3",flag:"0"}
                              ];
-                              var html="";
+                    //<strong><input type="checkBox" id="checkAll" onclick="selectAll()" />全选</strong>
+                              var html='<strong><input type="checkBox" id="checkAll" onclick="selectAll()" />全选</strong>';
                              for(var  i=0;i<area.length;i++){
                                  html+='<div><input type="checkbox" name="city" value="'+area[i].name+'" >'+area[i].name+'</div>';
                             }
@@ -197,14 +199,14 @@
         function checkTime(){
             var index = $("#val1").val();
                 if($("#startTime0").val() >= $("#endTime0").val()){
-                    updateTips("结束时间必须大于开始时间0");
+                    updateTips("结束时间必须大于开始时间");
                     return false;
                 }
             if(index>=1){
                 for(var i=1;i<=index;i++){
                    if($("#startTime"+i).val()!="" || $("#endTime"+i).val()!="" || $("#sub_count" + i).val()!="" ){
                        if($("#startTime"+i).val()>=$("#endTime"+i).val()){
-                           updateTips("结束时间必须大于开始时间1");
+                           updateTips("结束时间必须大于开始时间");
                            return false;
                        }else{
                            for(var j=0;j<=i-1;j++){
@@ -258,6 +260,19 @@
         }
     }
 
+    function selectAll(){
+        var checklist = document.getElementsByName ("city");
+        if(document.getElementById("checkAll").checked){
+            for(var i=0;i<checklist.length;i++){
+                checklist[i].checked = 1;
+            }
+        }else{
+            for(var j=0;j<checklist.length;j++){
+                checklist[j].checked = 0;
+            }
+        }
+        choose();
+    }
 </script>
 
 

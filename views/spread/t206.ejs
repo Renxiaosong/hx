@@ -32,6 +32,7 @@ $(function() {
     var name = $("#taskname");
     var url = $("#url");
     var doc = $("#doc");
+    var area = $("#area");
     //var sub_count = $("#sub_count");
     var allFields = $([]).add(name).add(url).add(doc);
 
@@ -69,6 +70,7 @@ $(function() {
                 url: url.val(),
                 task_type: $("#task_type").val(),
                 schedule: list,
+                area: $("#area").val(),
                 doc: $("#doc").val()
 
             };
