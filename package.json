@@ -6,16 +6,16 @@
     "start": "node app.js"
   },
   "dependencies": {
-    "express": "3",
-    "ejs": "*",
-    "connect-flash": "*",
-    "mongodb": "*",
-    "mongoose": "*",
-    "passport": "*",
-    "passport-local": "*",
-    "bcrypt": "*",
-    "async":"*",
-    "mongoose-id-autoinc":"*",
-    "request":"*"
+    "async": "^2.6.0",
+    "bcrypt": "^1.0.3",
+    "connect-flash": "^0.1.1",
+    "ejs": "^2.5.7",
+    "express": "^3.21.2",
+    "mongodb": "^2.2.33",
+    "mongoose": "^4.13.4",
+    "mongoose-id-autoinc": "^2013.7.14-4",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "request": "^2.83.0"
   }
 }
