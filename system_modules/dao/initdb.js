@@ -115,7 +115,7 @@ function inirRole(callback) {
                 if (!role) {
                     console.info('添加超级管理员权限');
                     var adminRole = {
-                        id: 0, //权限ID
+                        id: 2, //权限ID
                         text: '试用权限', //权限名称
                         createUser: '系统',
                         homeRoute: '/person', //权限默认首页
