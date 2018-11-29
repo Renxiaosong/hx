@@ -1,7 +1,7 @@
-var mongoose = require('../database/mongodb');
-//var bcrypt = require('bcrypt');
-var SALT_WORK_FACTOR = 11;
-var Schema = mongoose.Schema;
+const mongoose = require('../database/mongodb');
+//const bcrypt = require('bcrypt');
+const SALT_WORK_FACTOR = 11;
+const Schema = mongoose.Schema;
 
 
 
@@ -11,7 +11,7 @@ var Schema = mongoose.Schema;
  * 用户模型
  * @type Schema
  */
-var userSchema = new Schema({
+const userSchema = new Schema({
     username: {type: String, required: true, unique: true}, //用户名
     password: {type: String, required: true}, //密码
     name: {type: String, required: true}, //显示名称
@@ -34,7 +34,7 @@ var userSchema = new Schema({
  */
 /*
 userSchema.pre('save', function(next) {
-    var user = this;
+    const user = this;
 
     if (!user.isModified('password'))
         return next();
@@ -74,7 +74,7 @@ userSchema.methods.comparePassword = function(candidatePassword, cb) {
 };
 
 //****************定义实体控制*******************
-var userManager = mongoose.model('User', userSchema);
+const userManager = mongoose.model('User', userSchema);
 
 //*******************暴露接口*******************
 /**
@@ -93,7 +93,7 @@ exports.findUser = function(where, callback) {
  * @returns {undefined}
  */
 exports.saveUser = function(newUser, callback) {
-    var user = new userManager(newUser);
+    const user = new userManager(newUser);
     user.save(function(err) {
         if (err) {
             callback(err, '保存用户数据错误');
@@ -113,15 +113,15 @@ exports.saveUser = function(newUser, callback) {
  * @returns {undefined}
  */
 exports.findPagination = function(params, callback) {
-    var q = params.search || {};//查询调价
-    var col = params.columns;//字段
+    const q = params.search || {};//查询调价
+    const col = params.columns;//字段
 
-    var pageNumber = params.num || 1;//页数
-    var resultsPerPage = params.limit || 10;//每页行数
+    const pageNumber = params.num || 1;//页数
+    const resultsPerPage = params.limit || 10;//每页行数
 
-    var skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;//其实也
+    const skipFrom = (pageNumber * resultsPerPage) - resultsPerPage;//其实也
     console.info('q:' + q + ' col:' + col + ' pageNumber:' + pageNumber + ' skipFrom:' + skipFrom);
-    var query = userManager.find(q, col).sort('-createTime').skip(skipFrom).limit(resultsPerPage);
+    const query = userManager.find(q, col).sort('-createTime').skip(skipFrom).limit(resultsPerPage);
 
     query.exec(function(err, results) {
         if (err) {
@@ -132,7 +132,7 @@ exports.findPagination = function(params, callback) {
                     callback(err, null);
                 } else {
                     console.info('--->'+results.toString());
-                    var pageCount = Math.ceil(count / resultsPerPage);
+                    const pageCount = Math.ceil(count / resultsPerPage);
                     callback(null, {'pageCount': pageCount, 'results': results, currentPage: pageNumber});
                 }
             });
