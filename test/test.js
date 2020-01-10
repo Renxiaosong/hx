@@ -1,19 +1,8 @@
 const MongoClient = require('mongodb').MongoClient;
-const config = require('../system_modules/database/dbconfig')；
-const dbUrl ='mongodb://'+config.username+':'+config.pwd+'@'+config.host+':'+config.port+'/'+config.dbname;
+const config = require('../system_modules/database/dbconfig')
+// const dbUrl ='mongodb://'+config.username+':'+config.pwd+'@'+config.host+':'+config.port+'/'+config.dbname;
+const dbUrl ='mongodb://'+config.host+':'+config.port+'/'+config.dbname;
 
-
-function connectDb(callback) {
-    MongoClient.connect(dbUrl,function(err,db){
-        if(err) {
-            console.log(err)
-            console.log('数据库连接失败');
-            return;
-        }
-        callback(db);
-        db.close();
-    })
-}
 
 const connectDB=()=>{
     return MongoClient.connect(dbUrl).then((db)=>{

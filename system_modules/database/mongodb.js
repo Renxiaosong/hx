@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const autoinc    = require('mongoose-id-autoinc');
 
 
-const  uri = 'mongodb://'+config.username+':'+config.pwd+'@'+config.host+':'+config.port+'/'+config.dbname;
+// const  uri = 'mongodb://'+config.username+':'+config.pwd+'@'+config.host+':'+config.port+'/'+config.dbname;
+const  uri = 'mongodb://'+config.host+':'+config.port+'/'+config.dbname;
 mongoose.connect(uri);
 
 //数据库连接

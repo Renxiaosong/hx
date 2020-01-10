@@ -1,11 +1,9 @@
 const DB = require('./test');
 
 function test() {
-    DB.find('users',{},{name:1}).then((result) =>{
+    DB.find('users',{},{}).then((result) =>{
         console.log(result)
     }).catch((err) =>{
         console.error(err)
     })
 }
-
-test()
