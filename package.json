@@ -13,7 +13,7 @@
     "express": "^3.21.2",
     "fs": "0.0.1-security",
     "koa": "^2.7.0",
-    "mongodb": "^2.2.36",
+    "mongodb": "^3.1.13",
     "mongoose": "^4.13.17",
     "mongoose-id-autoinc": "^2013.7.14-4",
     "multer": "^1.4.2",
